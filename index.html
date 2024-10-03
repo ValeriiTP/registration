@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація та Вхід</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .social-login {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .social-login button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .toggle {
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="form-title">Реєстрація</h1>
+    <form id="auth-form" action="/register" method="POST">
+        <!-- Реєстрація -->
+        <div id="register-fields">
+            <div class="form-group">
+                <label for="name">Ім'я</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="birthdate">Дата народження</label>
+                <div style="display: flex; justify-content: space-between;">
+                    <select id="day" name="day" required>
+                        <option value="">День</option>
+                        <!-- Додаємо дні через JavaScript -->
+                        <script>
+                            for (let i = 1; i <= 31; i++) {
+                                document.write('<option value="' + i + '">' + i + '</option>');
+                            }
+                        </script>
+                    </select>
+
+                    <select id="month" name="month" required>
+                        <option value="">Місяць</option>
+                        <option value="1">Січень</option>
+                        <option value="2">Лютий</option>
+                        <option value="3">Березень</option>
+                        <option value="4">Квітень</option>
+                        <option value="5">Травень</option>
+                        <option value="6">Червень</option>
+                        <option value="7">Липень</option>
+                        <option value="8">Серпень</option>
+                        <option value="9">Вересень</option>
+                        <option value="10">Жовтень</option>
+                        <option value="11">Листопад</option>
+                        <option value="12">Грудень</option>
+                    </select>
+
+                    <select id="year" name="year" required>
+                        <option value="">Рік</option>
+                        <!-- Додаємо роки через JavaScript з обмеженням -->
+                        <script>
+                            const currentYear = new Date().getFullYear();
+                            const maxYear = currentYear - 14; // Мінімальний вік 14 років
+                            const minYear = currentYear - 80; // Максимальний вік 80 років
+
+                            for (let i = maxYear; i >= minYear; i--) {
+                                document.write('<option value="' + i + '">' + i + '</option>');
+                            }
+                        </script>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вхід і спільні поля для входу/реєстрації -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" id="submit-button">Зареєструватись</button>
+    </form>
+
+    <div class="social-login">
+        <button onclick="loginWithGoogle()">Увійти через Google</button>
+        <button onclick="loginWithApple()">Увійти через Apple</button>
+    </div>
+
+    <!-- Текст для перемикання між реєстрацією і входом -->
+    <div class="toggle" onclick="toggleForm()">Вже маєте акаунт? Увійдіть</div>
+</div>
+
+<script>
+    function loginWithGoogle() {
+        // Реалізація для входу через Google OAuth
+        window.location.href = "/auth/google";
+    }
+
+    function loginWithApple() {
+        // Реалізація для входу через Apple OAuth
+        window.location.href = "/auth/apple";
+    }
+
+    function toggleForm() {
+        // Перемикаємо між формою реєстрації та входу
+        const formTitle = document.getElementById('form-title');
+        const registerFields = document.getElementById('register-fields');
+        const submitButton = document.getElementById('submit-button');
+        const toggleText = document.querySelector('.toggle');
+
+        if (formTitle.innerText === 'Реєстрація') {
+            formTitle.innerText = 'Вхід';
+            registerFields.style.display = 'none';  // Ховаємо поля реєстрації
+            submitButton.innerText = 'Увійти';
+            toggleText.innerText = 'Немає акаунту? Зареєструйтесь';
+            document.getElementById('auth-form').action = '/login';
+        } else {
+            formTitle.innerText = 'Реєстрація';
+            registerFields.style.display = 'block';  // Показуємо поля реєстрації
+            submitButton.innerText = 'Зареєструватись';
+            toggleText.innerText = 'Вже маєте акаунт? Увійдіть';
+            document.getElementById('auth-form').action = '/register';
+        }
+    }
+</script>
+
+</body>
+</html>
